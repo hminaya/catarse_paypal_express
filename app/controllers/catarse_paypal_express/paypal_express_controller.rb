@@ -27,7 +27,7 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
         ip: request.remote_ip,
         return_url: success_paypal_expres_url(id: backer.id),
         cancel_return_url: cancel_paypal_expres_url(id: backer.id),
-        currency_code: 'BRL',
+        currency_code: 'USD',
         description: t('paypal_description', scope: SCOPE, :project_name => backer.project.name, :value => backer.display_value),
         notify_url: ipn_paypal_express_url
       })
@@ -38,7 +38,8 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
       redirect_to gateway.redirect_url_for(response.token)
     rescue Exception => e
       Rails.logger.info "-----> #{e.inspect}"
-      flash[:failure] = t('paypal_error', scope: SCOPE)
+      #flash[:failure] = t('paypal_error', scope: SCOPE)
+      flash[:failure] = e.inspect
       return redirect_to main_app.new_project_backer_path(backer.project)
     end
   end
@@ -59,7 +60,8 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
       redirect_to main_app.project_backer_path(project_id: backer.project.id, id: backer.id)
     rescue Exception => e
       Rails.logger.info "-----> #{e.inspect}"
-      flash[:failure] = t('paypal_error', scope: SCOPE)
+      #flash[:failure] = t('paypal_error', scope: SCOPE)
+      flash[:failure] = e.inspect
       return redirect_to main_app.new_project_backer_path(backer.project)
     end
   end
