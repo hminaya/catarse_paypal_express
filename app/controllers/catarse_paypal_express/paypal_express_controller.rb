@@ -22,7 +22,7 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
   end
 
   def pay
-    begin
+    #begin
       response = gateway.setup_purchase(backer.price_in_cents, {
         ip: request.remote_ip,
         return_url: success_paypal_expres_url(id: backer.id),
@@ -36,16 +36,16 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
       backer.update_attributes payment_method: 'PayPal', payment_token: response.token
 
       redirect_to gateway.redirect_url_for(response.token)
-    rescue Exception => e
-      Rails.logger.info "-----> #{e.inspect}"
+    #rescue Exception => e
+      #Rails.logger.info "-----> #{e.inspect}"
       #flash[:failure] = t('paypal_error', scope: SCOPE)
-      flash[:failure] = e.inspect
-      return redirect_to main_app.new_project_backer_path(backer.project)
-    end
+      #flash[:failure] = e.inspect
+      #return redirect_to main_app.new_project_backer_path(backer.project)
+    #end
   end
 
   def success
-    begin
+    #begin
       purchase = gateway.purchase(backer.price_in_cents, {
         ip: request.remote_ip,
         token: backer.payment_token,
@@ -58,12 +58,12 @@ class CatarsePaypalExpress::PaypalExpressController < ApplicationController
 
       flash[:success] = t('success', scope: SCOPE)
       redirect_to main_app.project_backer_path(project_id: backer.project.id, id: backer.id)
-    rescue Exception => e
-      Rails.logger.info "-----> #{e.inspect}"
+    #rescue Exception => e
+      #Rails.logger.info "-----> #{e.inspect}"
       #flash[:failure] = t('paypal_error', scope: SCOPE)
-      flash[:failure] = e.inspect
-      return redirect_to main_app.new_project_backer_path(backer.project)
-    end
+      #flash[:failure] = e.inspect
+      #return redirect_to main_app.new_project_backer_path(backer.project)
+    #end
   end
 
   def cancel
